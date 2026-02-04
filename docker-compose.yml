@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: call_flow_engine_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: call_flow_engine_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - call_flow_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: call_flow_engine_app
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@postgres:5432/call_flow_engine_dev
+      ARI_URL: ${ARI_URL:-ws://asterisk:8088/ari/events}
+      ARI_USER: ${ARI_USER:-asterisk}
+      ARI_PASSWORD: ${ARI_PASSWORD:-asterisk}
+      ARI_APP_NAME: ${ARI_APP_NAME:-callflow_elixir}
+      BITRIX_WEBHOOK_URL: ${BITRIX_WEBHOOK_URL:-http://mock-bitrix:9999}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-dev_secret_key_base_at_least_64_bytes_long_please_change_in_production}
+      MIX_ENV: dev
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - mix_deps:/app/deps
+      - mix_build:/app/_build
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        mix deps.get &&
+        mix ecto.create &&
+        mix ecto.migrate &&
+        mix phx.server
+      "
+    networks:
+      - call_flow_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mix_deps:
+  mix_build:
+
+networks:
+  call_flow_network:
+    driver: bridge

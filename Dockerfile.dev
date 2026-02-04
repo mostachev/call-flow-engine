@@ -1,0 +1,28 @@
+# Development Dockerfile with hot reload
+FROM elixir:1.14-alpine
+
+# Install dependencies
+RUN apk add --no-cache \
+    build-base \
+    git \
+    postgresql-client \
+    inotify-tools
+
+# Install hex and rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Set working directory
+WORKDIR /app
+
+# Install Phoenix
+RUN mix archive.install hex phx_new --force
+
+# Set environment for development
+ENV MIX_ENV=dev
+
+# Expose Phoenix port
+EXPOSE 4000
+
+# Default command (will be overridden in docker-compose.yml)
+CMD ["mix", "phx.server"]

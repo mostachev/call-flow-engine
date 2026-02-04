@@ -1,0 +1,45 @@
+# Git
+.git/
+.gitignore
+
+# Elixir
+/_build/
+/deps/
+/*.ez
+/cover/
+/doc/
+.fetch
+
+# Environment
+.env
+.env.*
+
+# Tests
+/test/
+
+# Documentation
+README.md
+SETUP_INSTRUCTIONS.md
+PROJECT_SUMMARY.md
+CHANGELOG.md
+*.md
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+/tmp/
+erl_crash.dump
