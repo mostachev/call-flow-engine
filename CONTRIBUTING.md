@@ -107,7 +107,7 @@ We actively welcome your pull requests:
 
 ```bash
 # 1. Fork and clone the repository
-git clone https://github.com/YOUR_USERNAME/call-flow-engine.git
+git clone https://github.com/mostachev/call-flow-engine.git
 cd call_flow_engine
 
 # 2. Install dependencies
@@ -538,7 +538,7 @@ Your contributions make CallFlowEngine better for everyone. We appreciate your t
 
 **Questions?** Open a [Discussion](https://github.com/mostachev/call-flow-engine/discussions)
 
-**Found a security issue?** Email security@yourdomain.com (Do NOT create public issue)
+**Found a security issue?** Email security@prigov.info (Do NOT create public issue)
 
 ---
 
